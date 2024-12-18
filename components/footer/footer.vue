@@ -12,7 +12,7 @@ export default{
     computed: {
         copyrightText() {
             const currentYear = new Date().getFullYear();
-            return `@ 2023-${currentYear}, Carpe Diem`;
+            return `@ 2023-${currentYear}, Libria`;
         }
     }
 }
