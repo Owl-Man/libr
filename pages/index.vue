@@ -1,9 +1,250 @@
 <template>
-  <Tutorial/>
+  <div class="page-main">
+    <div class="page-container">
+      <nuxt :key="$route.fullPath" />
+      <!-- Верхний блок с популярными главами -->
+      <h2>Обзор →</h2>
+      <section class="popular">
+        <div v-for="item in popularBooks" :key="item.id" class="book-card">
+          <img :src="item.image" :alt="item.title" />
+          <div class="title">{{ item.title }}</div>
+          <div class="chapter">{{ item.chapter }}</div>
+        </div>
+      </section>
+
+      <!-- Блок "Сейчас читают" -->
+      <section class="current-reads">
+        <h2>Сейчас читают → </h2>
+        <div class="reads-section">
+          <!-- Новинки -->
+          <div class="reads-category">
+            <h3>Новинки</h3>
+            <div v-for="item in currentReads.new" :key="item.id" class="read-item">
+              <img :src="item.image" :alt="item.title" />
+              <div class="read-title">{{ item.title }}</div>
+            </div>
+          </div>
+          <!-- Набирающее популярность -->
+          <div class="reads-category">
+            <h3>Набирающее популярность</h3>
+            <div v-for="item in currentReads.trending" :key="item.id" class="read-item">
+              <img :src="item.image" :alt="item.title" />
+              <div class="read-title">{{ item.title }}</div>
+            </div>
+          </div>
+          <!-- Популярное -->
+          <div class="reads-category">
+            <h3>Популярное</h3>
+            <div v-for="item in currentReads.popular" :key="item.id" class="read-item">
+              <img :src="item.image" :alt="item.title" />
+              <div class="read-title">{{ item.title }}</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Блок "Последние обновления" -->
+      <section class="updates">
+        <h2>Последние обновления</h2>
+        <div class="update-item" v-for="update in updates" :key="update.id">
+          <div class="update-title">{{ update.title }}</div>
+          <div class="update-chapter">{{ update.chapter }}</div>
+        </div>
+      </section>
+    </div>
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'IndexPage'
+  name: 'IndexPage',
+
+  data() {
+    return {
+      popularBooks: [
+        { id: 1, title: "Popular book 1", chapter: "Глава 181", image: "book_pic6.webp" },
+        { id: 2, title: "Popular book 2", chapter: "Глава 116", image: "book_pic7.webp" },
+        { id: 3, title: "Popular book 3", chapter: "Глава 415", image: "book_pic.webp" },
+        { id: 4, title: "Popular book 4", chapter: "Глава 356", image: "book_pic5.webp" },
+        { id: 5, title: "Popular book 5", chapter: "Глава 102", image: "book_pic4.jpg" },
+        { id: 6, title: "Popular book 6", chapter: "Глава 356", image: "book_pic2.jpg" },
+        { id: 7, title: "Popular book 7", chapter: "Глава 356", image: "book_pic3.jpg" },
+        { id: 8, title: "Popular book 8", chapter: "Глава 356", image: "book_pic5.webp" },
+        { id: 9, title: "Popular book 9", chapter: "Глава 356", image: "book_pic.webp" },
+        { id: 10, title: "Popular book 10", chapter: "Глава 356", image: "book_pic4.jpg" },
+        { id: 11, title: "Popular book 11", chapter: "Глава 356", image: "book_pic5.webp" },
+        { id: 12, title: "Popular book 12", chapter: "Глава 356", image: "book_pic.jpg" }
+      ],
+      currentReads: {
+        new: [
+          { id: 1, title: "Current reading new book 1", chapter: "Глава 181", image: "book_pic.webp" },
+          { id: 2, title: "Current reading new book 2", chapter: "Глава 116", image: "book_pic2.jpg" },
+          { id: 3, title: "Current reading new book 3", chapter: "Глава 807", image: "book_pic.webp" },
+          { id: 3, title: "Current reading new book 4", chapter: "Глава 807", image: "book_pic.webp" }
+        ],
+        trending: [
+          { id: 1, title: "Current trending book 1", chapter: "Глава 181", image: "book_pic.webp" },
+          { id: 2, title: "Current trending book 2", chapter: "Глава 116", image: "book_pic2.jpg" },
+          { id: 3, title: "Current trending book 3", chapter: "Глава 807", image: "book_pic.webp" }
+        ],
+        popular: [
+          { id: 1, title: "Current popular book 1", chapter: "Глава 181", image: "book_pic.webp" },
+          { id: 2, title: "Current popular book 2", chapter: "Глава 116", image: "book_pic2.jpg" },
+          { id: 3, title: "Сurrent popular book 3", chapter: "Глава 807", image: "book_pic.webp" }
+        ],
+      },
+      updates: [
+        { id: 1, title: "Book 1", chapter: "Том 1 Глава 181" },
+        { id: 2, title: "Book 2", chapter: "Том 2 Глава 181" },
+      ],
+    };
+  },
 }
+
 </script>
+
+<style lang="scss">
+.page-container {
+  max-width: 1200px;
+  /* Ограничиваем максимальную ширину */
+  margin: 0 auto;
+  /* Центрируем страницу по горизонтали */
+  padding: 20px;
+  /* Отступы от краёв */
+  box-sizing: border-box;
+  /* Включаем padding в общую ширину */
+}
+
+/* Стили для популярного блока */
+.popular {
+  margin-top: 20px;
+  display: flex;
+  gap: 15px;
+  overflow-x: auto;
+  white-space: nowrap;
+  /* Предотвращает перенос элементов на новую строку */
+  padding-bottom: 10px;
+  /* Добавим отступ для прокрутки */
+}
+
+.popular::-webkit-scrollbar {
+  height: 8px;
+  /* Высота полосы прокрутки */
+}
+
+.popular::-webkit-scrollbar-thumb {
+  background-color: #555;
+  /* Цвет бегунка */
+  border-radius: 50px;
+  /* Скругленные края */
+}
+
+.popular::-webkit-scrollbar-track {
+  background-color: #333;
+  /* Цвет фона полосы прокрутки */
+}
+
+.book-card {
+  flex: 0 0 150px;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.book-card img {
+  width: 100%;
+  border-radius: 5px;
+  transition: transform 0.3s ease;
+}
+
+.book-card:hover img {
+  transform: scale(1.02);
+  /* Увеличение изображения на 2% */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.title {
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.chapter {
+  font-size: 12px;
+  color: #aaa;
+}
+
+/* "Сейчас читают" блок */
+.current-reads h2 {
+  margin-top: 20px;
+}
+
+.reads-section {
+  margin-top: 20px;
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+.reads-category {
+  flex: 1;
+}
+
+.read-item {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  margin: 10px 0;
+  transition: transform 0.3s ease;
+}
+
+.read-item img {
+  width: 50px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 5px;
+  margin-right: 10px;
+  transition: transform 0.3s ease;
+}
+
+.read-item:hover img {
+  transform: scale(1.1);
+  /* Увеличение изображения на 10% */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.read-title {
+  font-size: 14px;
+  color: #202020;
+}
+
+.reads-category h3 {
+  font-size: 16px;
+}
+
+.reads-category ul {
+  list-style: none;
+  padding: 0;
+}
+
+.reads-category li {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+/* Последние обновления */
+.updates h2 {
+  margin-top: 20px;
+}
+
+.update-item {
+  margin: 10px 0;
+}
+
+.update-title {
+  font-size: 14px;
+}
+
+.update-chapter {
+  font-size: 12px;
+  color: #aaa;
+}
+</style>

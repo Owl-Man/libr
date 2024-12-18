@@ -1,7 +1,7 @@
 <template>
     <div class="page-main">
         <Header />
-        <nuxt :key="$route.fullPath"/>
+        <nuxt :key="$route.fullPath" />
         <Footer />
     </div>
 </template>
