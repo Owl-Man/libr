@@ -1,9 +1,10 @@
 <template>
   <div class="page-main">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css" rel="stylesheet">
     <div class="page-container">
       <nuxt :key="$route.fullPath" />
       <!-- Верхний блок с популярными главами -->
-      <h2>Обзор →</h2>
+      <h2 class="title-text">Обзор →</h2>
       <section class="popular">
         <div v-for="item in popularBooks" :key="item.id" class="book-card">
           <img :src="item.image" :alt="item.title" />
@@ -46,10 +47,19 @@
       <!-- Блок "Последние обновления" -->
       <section class="updates">
         <h2>Последние обновления</h2>
-        <div class="update-item" v-for="update in updates" :key="update.id">
+        <ul class="updates-list">
+          <li v-for="book in updates" :key="book.id" class="update-item">
+            <img :src="book.image" :alt="book.title" class="book-image" />
+            <div class="update-title">{{ book.title }}</div>
+            <div class="update-chapter">{{ book.chapter }}</div>
+          </li>
+        </ul>
+
+        
+        <!-- <div class="update-item" v-for="update in updates" :key="update.id">
           <div class="update-title">{{ update.title }}</div>
           <div class="update-chapter">{{ update.chapter }}</div>
-        </div>
+        </div> -->
       </section>
     </div>
   </div>
@@ -68,12 +78,12 @@ export default {
         { id: 4, title: "Popular book 4", chapter: "Глава 356", image: "book_pic5.webp" },
         { id: 5, title: "Popular book 5", chapter: "Глава 102", image: "book_pic4.jpg" },
         { id: 6, title: "Popular book 6", chapter: "Глава 356", image: "book_pic2.jpg" },
-        { id: 7, title: "Popular book 7", chapter: "Глава 356", image: "book_pic3.jpg" },
-        { id: 8, title: "Popular book 8", chapter: "Глава 356", image: "book_pic5.webp" },
-        { id: 9, title: "Popular book 9", chapter: "Глава 356", image: "book_pic.webp" },
-        { id: 10, title: "Popular book 10", chapter: "Глава 356", image: "book_pic4.jpg" },
-        { id: 11, title: "Popular book 11", chapter: "Глава 356", image: "book_pic5.webp" },
-        { id: 12, title: "Popular book 12", chapter: "Глава 356", image: "book_pic.jpg" }
+        { id: 7, title: "Popular book 7", chapter: "Глава 421", image: "book_pic3.jpg" },
+        { id: 8, title: "Popular book 8", chapter: "Глава 125", image: "book_pic5.webp" },
+        { id: 9, title: "Popular book 9", chapter: "Глава 950", image: "book_pic.webp" },
+        { id: 10, title: "Popular book 10", chapter: "Глава 753", image: "book_pic4.jpg" },
+        { id: 11, title: "Popular book 11", chapter: "Глава 654", image: "book_pic5.webp" },
+        { id: 12, title: "Popular book 12", chapter: "Глава 70", image: "book_pic2.jpg" }
       ],
       currentReads: {
         new: [
@@ -94,8 +104,11 @@ export default {
         ],
       },
       updates: [
-        { id: 1, title: "Book 1", chapter: "Том 1 Глава 181" },
-        { id: 2, title: "Book 2", chapter: "Том 2 Глава 181" },
+        { id: 1, title: "Book 1", chapter: "Том 1 Глава 181", image: "book_pic3.jpg" },
+        { id: 2, title: "Book 2", chapter: "Том 2 Глава 165", image: "book_pic6.webp" },
+        { id: 3, title: "Book 3", chapter: "Глава 45", image: "book_pic7.webp" },
+        { id: 4, title: "Book 4", chapter: "Глава 85", image: "book_pic5.webp" },
+        { id: 5, title: "Book 5", chapter: "Том 1 Глава 105", image: "book_pic2.jpg" }
       ],
     };
   },
@@ -104,6 +117,14 @@ export default {
 </script>
 
 <style lang="scss">
+.title-text {
+  transition: transform 0.3s ease;
+}
+
+.title-text:hover {
+  transform: scale(1.02);
+}
+
 .page-container {
   max-width: 1200px;
   /* Ограничиваем максимальную ширину */
@@ -113,6 +134,12 @@ export default {
   /* Отступы от краёв */
   box-sizing: border-box;
   /* Включаем padding в общую ширину */
+  font-family: $main-font-family;
+}
+
+.page-container h2 {
+  margin-top: 10px;
+  font-size: $titleFontSize;
 }
 
 /* Стили для популярного блока */
@@ -174,7 +201,7 @@ export default {
 
 /* "Сейчас читают" блок */
 .current-reads h2 {
-  margin-top: 20px;
+  margin-top: 40px;
 }
 
 .reads-section {
@@ -191,7 +218,6 @@ export default {
 .read-item {
   display: flex;
   align-items: center;
-  margin: 10px 0;
   margin: 10px 0;
   transition: transform 0.3s ease;
 }
@@ -232,11 +258,36 @@ export default {
 
 /* Последние обновления */
 .updates h2 {
-  margin-top: 20px;
+  margin-top: 40px;
+  font-size: $titleFontSize;
+}
+
+.updates-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .update-item {
+  display: flex;
+  align-items: center; /* Выравниваем по вертикали */
+  margin-bottom: 15px;
+  transition: transform 0.3s ease;
   margin: 10px 0;
+}
+
+.update-item:hover {
+  transform: scale(1.05);
+  /* Увеличение изображения на 10% */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.book-image {
+  width: 50px; /* Ширина изображения */
+  height: 75px; /* Высота изображения */
+  object-fit: cover; /* Корректное отображение */
+  border-radius: 5px; /* Скруглённые углы */
+  margin-right: 15px; /* Отступ между изображением и текстом */
 }
 
 .update-title {
@@ -244,6 +295,7 @@ export default {
 }
 
 .update-chapter {
+  margin-left: 5px;
   font-size: 12px;
   color: #aaa;
 }

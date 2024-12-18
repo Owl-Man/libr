@@ -25,5 +25,6 @@ export default {
 .page-main {
     position: relative;
     z-index: $zMain;
+    font-family: $main-font-family;
 }
 </style>

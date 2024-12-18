@@ -35,5 +35,9 @@ export default{
 }
 .sectionsBtn {
     font-size: $headerFontSize;
+    transition: transform 0.3s ease;
+}
+.sectionsBtn:hover {
+  transform: scale(1.2);
 }
 </style>

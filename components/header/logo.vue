@@ -16,5 +16,10 @@
     display: flex;
     justify-content: space-between;
     z-index: $zMain;
+    transition: transform 0.3s ease;
+}
+.logo:hover {
+    transform: scale(1.07);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 </style>
