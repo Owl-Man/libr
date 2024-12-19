@@ -151,7 +151,7 @@ export default {
   white-space: nowrap;
   /* Предотвращает перенос элементов на новую строку */
   padding-bottom: 10px;
-  /* Добавим отступ для прокрутки */
+  /* Отступ для прокрутки */
 }
 
 .popular::-webkit-scrollbar {
