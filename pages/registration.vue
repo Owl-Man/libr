@@ -1,5 +1,6 @@
 <template>
     <div class="registration-page">
+      <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css" rel="stylesheet">
       <h1>Регистрация</h1>
       <form @submit.prevent="registerUser" class="registration-form">
         <!-- Поле Имя -->

@@ -20,7 +20,7 @@ export default {
     },
     data() {
         return {
-            isUserFetched: true
+            isUserFetched: false
         }
     }
 }

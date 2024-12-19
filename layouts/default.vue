@@ -1,8 +1,8 @@
 <template>
     <div class="page-main">
         <Header />
-        <nuxt :key="$route.fullPath" />
-        <Footer />
+        <nuxt :key="$route.fullPath" class="content"/>
+        <Footer class="footer"/>
     </div>
 </template>
 
@@ -23,8 +23,19 @@ export default {
 
 <style lang="scss">
 .page-main {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
     position: relative;
     z-index: $zMain;
     font-family: $main-font-family;
+}
+
+.content {
+  flex: 1;
+}
+
+.footer {
+    padding: 10px;
 }
 </style>
