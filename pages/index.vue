@@ -1,12 +1,12 @@
 <template>
   <div class="page-main">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css" rel="stylesheet">
-    <div class="page-container">
+    <div class="main-page-container">
       <nuxt :key="$route.fullPath" />
       <!-- Верхний блок с популярными главами -->
       <h2 class="title-text">Обзор →</h2>
       <section class="popular">
-        <div v-for="item in popularBooks" :key="item.id" class="book-card">
+        <div v-for="item in popularBooks" :key="item.id" class="main-book-card">
           <img :src="item.image" :alt="item.title" />
           <div class="title">{{ item.title }}</div>
           <div class="chapter">{{ item.chapter }}</div>
@@ -125,7 +125,7 @@ export default {
   transform: scale(1.02);
 }
 
-.page-container {
+.main-page-container {
   max-width: 1200px;
   /* Ограничиваем максимальную ширину */
   margin: 0 auto;
@@ -171,7 +171,7 @@ export default {
   /* Цвет фона полосы прокрутки */
 }
 
-.book-card {
+.main-book-card {
   flex: 0 0 150px;
   text-align: center;
   transition: transform 0.3s ease;
