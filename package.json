@@ -9,6 +9,7 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
+    "@nuxtjs/composition-api": "^0.34.0",
     "@nuxtjs/style-resources": "^1.2.2",
     "core-js": "^3.25.3",
     "nuxt": "^2.18.1",
