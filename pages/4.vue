@@ -59,6 +59,7 @@
                 </svg>
               </button>
             </div>
+            
           </div>
         </section>
       </div>
@@ -82,12 +83,93 @@
               title: 'Полное исцеление',
               chapters: '11 из 12 гл',
               rating: 4.7,
-              description: 'После окончания средней школы Нацуко Хиросе начинает карьеру аниматора. Ее талант быстро расцветает, и вскоре она...',
+              description: 'После окончания средней школы ... начинает карьеру аниматора. Ее талант быстро расцветает, и вскоре она...',
               image: 'book_pic.webp',
               status: 'Смотрю',
             },
             {
               id: 2,
+              title: 'Что-то еще',
+              chapters: '11 из 12 гл',
+              rating: 4.7,
+              description: 'Что-то еще описание...',
+              image: 'book_pic2.jpg',
+              status: 'Смотрю',
+            },
+            {
+              id: 20,
+              title: 'Что-то еще',
+              chapters: '11 из 12 гл',
+              rating: 4.7,
+              description: 'Что-то еще описание...',
+              image: 'book_pic.webp',
+              status: 'Смотрю',
+            },
+            {
+              id: 21,
+              title: 'Что-то еще',
+              chapters: '11 из 12 гл',
+              rating: 4.7,
+              description: 'Что-то еще описание...',
+              image: 'book_pic.webp',
+              status: 'Смотрю',
+            },
+            {
+              id: 22,
+              title: 'Что-то еще',
+              chapters: '11 из 12 гл',
+              rating: 4.7,
+              description: 'Что-то еще описание...',
+              image: 'book_pic.webp',
+              status: 'Смотрю',
+            },
+            {
+              id: 23,
+              title: 'Что-то еще',
+              chapters: '11 из 12 гл',
+              rating: 4.7,
+              description: 'Что-то еще описание...',
+              image: 'book_pic.webp',
+              status: 'Смотрю',
+            },
+            {
+              id: 24,
+              title: 'Что-то еще',
+              chapters: '11 из 12 гл',
+              rating: 4.7,
+              description: 'Что-то еще описание...',
+              image: 'book_pic.webp',
+              status: 'Смотрю',
+            },
+            {
+              id: 25,
+              title: 'Что-то еще',
+              chapters: '11 из 12 гл',
+              rating: 4.7,
+              description: 'Что-то еще описание...',
+              image: 'book_pic.webp',
+              status: 'Смотрю',
+            },
+            {
+              id: 26,
+              title: 'Что-то еще',
+              chapters: '11 из 12 гл',
+              rating: 4.7,
+              description: 'Что-то еще описание...',
+              image: 'book_pic.webp',
+              status: 'Смотрю',
+            },
+            {
+              id: 27,
+              title: 'Что-то еще',
+              chapters: '11 из 12 гл',
+              rating: 4.7,
+              description: 'Что-то еще описание...',
+              image: 'book_pic.webp',
+              status: 'Смотрю',
+            },
+            {
+              id: 28,
               title: 'Что-то еще',
               chapters: '11 из 12 гл',
               rating: 4.7,
@@ -148,6 +230,33 @@
               image: 'book_pic5.webp',
               status: 'Просмотрено',
             },
+            {
+              id: 10,
+              title: 'Книга 5',
+              chapters: '15 гл',
+              rating: 4.6,
+              description: 'Описание книги 5...',
+              image: 'book_pic5.webp',
+              status: 'Просмотрено',
+            },
+            {
+              id: 11,
+              title: 'Книга 5',
+              chapters: '15 гл',
+              rating: 4.6,
+              description: 'Описание книги 5...',
+              image: 'book_pic5.webp',
+              status: 'Просмотрено',
+            },
+            {
+              id: 12,
+              title: 'Книга 5',
+              chapters: '15 гл',
+              rating: 4.6,
+              description: 'Описание книги 5...',
+              image: 'book_pic5.webp',
+              status: 'Просмотрено',
+            },
           ],
           Отложено: [
             {
@@ -201,10 +310,11 @@
       this.selectedTab = tab;
       this.searchQuery = ''; // Сбрасываем поиск при переключении вкладки
       console.log(`Переключение на вкладку: ${tab}`);
-      this.updateKey++
+      this.updateKey++;
+      console.log(this.updateKey)
       },
       filterBooks() {
-        // Логика фильтрации реализована в computed свойстве filteredBooks
+        
       },
       addToBookmarks(book) {
         console.log(`Изменение статуса книги: ${book.title}`);
