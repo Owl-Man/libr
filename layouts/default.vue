@@ -1,65 +1,57 @@
+<!-- layouts/default.vue -->
 <template>
-  <div class="page-main">
-    <Header />
-    <transition name="fade" mode="out-in">
-      <nuxt :key="$route.fullPath" class="content" />
-    </transition>
+  <div class="page-in">
+    <Header @change-layout="changeLayout" />
+    <div class="content">
+      <Layout1 v-if="currentLayout === '1'" />
+      <Layout2 v-if="currentLayout === '2'" />
+      <Layout3 v-if="currentLayout === '3'" />
+      <Layout4 v-if="currentLayout === '4'" />
+    </div>
     <Footer class="footer" />
   </div>
 </template>
 
 <script>
-import Header from '@/components/header/header';
-import Footer from '@/components/footer/footer';
+import Header from '@/components/header/header'
+import Footer from '@/components/footer/footer'
+import Layout1 from '@/layouts/1.vue'
+import Layout2 from '@/layouts/2.vue'
+import Layout3 from '@/layouts/3.vue'
+import Layout4 from '@/layouts/4.vue'
 
 export default {
   name: 'Default',
   components: {
     Header,
     Footer,
+    Layout1,
+    Layout2,
+    Layout3,
+    Layout4
   },
-  watch: {
-    // Отслеживаем изменения маршрута для предотвращения лишних перерендеров
-    $route(to, from) {
-      // Можно добавить логику для управления состоянием при смене маршрута
-      this.handleRouteChange(to, from);
-    },
+  data() {
+    return {
+      currentLayout: '1' // Начальный layout
+    }
   },
   methods: {
-    handleRouteChange(to, from) {
-      // Здесь можно добавить дополнительную логику, например, прокрутку вверх
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    },
-  },
-};
+    changeLayout(layout) {
+      console.log('Changing layout to:', layout)
+      this.currentLayout = layout
+    }
+  }
+}
 </script>
 
-<style lang="scss">
-.page-main {
+<style scoped>
+.page-in {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  position: relative;
-  z-index: $zMain;
-  font-family: $main-font-family;
 }
 
 .content {
   flex: 1;
-}
-
-// Анимация для плавного перехода между страницами
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
-.footer {
-  padding: 10px;
 }
 </style>
