@@ -2,7 +2,7 @@
 <template>
     <div class="sections">
       <div v-for="item in categories" :key="item.semanticId">
-        <button class="sectionsBtn" type="button" @click="$emit('change-layout', item.semanticId)">
+        <button class="sectionsBtn" type="button" @click.prevent="navigate(item.semanticId)">
           {{ item.name }}
         </button>
       </div>
@@ -11,6 +11,11 @@
   
   <script>
   export default {
+    methods: {
+      navigate(page) {
+        this.$emit('change-layout', page);
+      }
+    },
     props: {
       categories: {
         type: Array,
