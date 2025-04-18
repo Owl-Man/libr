@@ -3,9 +3,10 @@
         <Logo />
         <Sections
             :categories="headerSections"
+            @change-layout="onChangeLayout"
         />
         <LoginTools 
-            v-if="isUserFetched";
+            v-if="isUserFetched"
             :isDesktop="isDesktop"
         />
     </div>
@@ -34,6 +35,11 @@ export default {
                 {"name": "Коллекции", "semanticId": "3"},
                 {"name": "Закладки", "semanticId": "4"}
             ]
+        }
+    },
+    methods: {
+        onChangeLayout(layout) {
+            this.$emit('change-layout', layout);
         }
     }
 }
