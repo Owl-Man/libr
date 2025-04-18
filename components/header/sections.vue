@@ -13,8 +13,7 @@
   export default {
     methods: {
       navigate(page) {
-        console.log('Navigating to:', page);
-        this.$emit('change-layout', String(page));
+        this.$emit('change-layout', page);
       }
     },
     props: {
