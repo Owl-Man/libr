@@ -2,6 +2,11 @@
   <div class="page-main">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css" rel="stylesheet">
     <div class="page-container">
+      <BookPopup
+        :is-open="isPopupOpen"
+        :book="selectedBook"
+        @close="closePopup"
+      />
       <!-- Поиск -->
       <div class="search-bar">
         <input
@@ -74,7 +79,8 @@
             <div
               v-for="book in category.books"
               :key="book.title"
-              class="book-card flex-none w-36 text-center"
+              class="book-card flex-none w-36 text-center cursor-pointer"
+              @click="openPopup(book)"
             >
               <img :src="book.cover" :alt="book.title" class="w-full rounded-lg" />
               <div class="title mt-2">{{ book.title }}</div>
@@ -89,8 +95,13 @@
 </template>
 
 <script>
+import BookPopup from '~/components/BookPopup.vue'
+
 export default {
   name: 'CatalogPage',
+  components: {
+    BookPopup
+  },
 
   data() {
     return {
@@ -124,6 +135,8 @@ export default {
           ],
         },
       ],
+      isPopupOpen: false,
+      selectedBook: null,
     };
   },
 
@@ -174,6 +187,30 @@ export default {
   methods: {
     filterBooks() {
       // Логика фильтрации реализована в computed свойстве filteredCategories
+    },
+    openPopup(book) {
+      this.selectedBook = {
+        ...book,
+        author: 'Автор ' + Math.floor(Math.random() * 10 + 1),
+        genre: ['Фантастика', 'Роман', 'Детектив', 'Фэнтези', 'Научная литература'][Math.floor(Math.random() * 5)],
+        country: ['Япония', 'Южная Корея', 'США', 'Россия', 'Франция'][Math.floor(Math.random() * 5)],
+        pages: Math.floor(Math.random() * 500) + 100,
+        year: Math.floor(Math.random() * 30) + 1990,
+        rating: (Math.random() * 2 + 3).toFixed(1),
+        description: 'Это увлекательная книга, которая погружает читателя в захватывающий мир приключений и открытий. История рассказывает о невероятных событиях, которые происходят с главными героями, и о том, как они справляются с различными испытаниями на своем пути.',
+        ratings: {
+          5: Math.floor(Math.random() * 100),
+          4: Math.floor(Math.random() * 100),
+          3: Math.floor(Math.random() * 100),
+          2: Math.floor(Math.random() * 50),
+          1: Math.floor(Math.random() * 20)
+        }
+      }
+      this.isPopupOpen = true
+    },
+    closePopup() {
+      this.isPopupOpen = false
+      this.selectedBook = null
     },
   },
 };

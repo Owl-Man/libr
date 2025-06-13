@@ -1,13 +1,18 @@
 <template>
   <div class="page-main">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css" rel="stylesheet">
+    <BookPopup
+      :is-open="isPopupOpen"
+      :book="selectedBook"
+      @close="closePopup"
+    />
     <div class="main-page-container">
       <nuxt :key="$route.fullPath" />
       <!-- Верхний блок с популярными главами -->
       <h2 class="title-text">Обзор →</h2>
       <section class="popular">
-        <div v-for="item in popularBooks" :key="item.id" class="main-book-card">
-          <img :src="item.image" :alt="item.title" />
+        <div v-for="item in popularBooks" :key="item.id" class="main-book-card cursor-pointer" @click="openPopup(item)">
+          <img :src="item.cover" :alt="item.title" />
           <div class="title">{{ item.title }}</div>
           <div class="chapter">{{ item.chapter }}</div>
         </div>
@@ -20,24 +25,24 @@
           <!-- Новинки -->
           <div class="reads-category">
             <h3>Новинки</h3>
-            <div v-for="item in currentReads.new" :key="item.id" class="read-item">
-              <img :src="item.image" :alt="item.title" />
+            <div v-for="item in currentReads.new" :key="item.id" class="read-item cursor-pointer" @click="openPopup(item)">
+              <img :src="item.cover" :alt="item.title" />
               <div class="read-title">{{ item.title }}</div>
             </div>
           </div>
           <!-- Набирающее популярность -->
           <div class="reads-category">
             <h3>Набирающее популярность</h3>
-            <div v-for="item in currentReads.trending" :key="item.id" class="read-item">
-              <img :src="item.image" :alt="item.title" />
+            <div v-for="item in currentReads.trending" :key="item.id" class="read-item cursor-pointer" @click="openPopup(item)">
+              <img :src="item.cover" :alt="item.title" />
               <div class="read-title">{{ item.title }}</div>
             </div>
           </div>
           <!-- Популярное -->
           <div class="reads-category">
             <h3>Популярное</h3>
-            <div v-for="item in currentReads.popular" :key="item.id" class="read-item">
-              <img :src="item.image" :alt="item.title" />
+            <div v-for="item in currentReads.popular" :key="item.id" class="read-item cursor-pointer" @click="openPopup(item)">
+              <img :src="item.cover" :alt="item.title" />
               <div class="read-title">{{ item.title }}</div>
             </div>
           </div>
@@ -48,8 +53,8 @@
       <section class="updates">
         <h2>Последние обновления</h2>
         <ul class="updates-list">
-          <li v-for="book in updates" :key="book.id" class="update-item">
-            <img :src="book.image" :alt="book.title" class="book-image" />
+          <li v-for="book in updates" :key="book.id" class="update-item cursor-pointer" @click="openPopup(book)">
+            <img :src="book.cover" :alt="book.title" class="book-image" />
             <div class="update-title">{{ book.title }}</div>
             <div class="update-chapter">{{ book.chapter }}</div>
           </li>
@@ -66,52 +71,86 @@
 </template>
 
 <script>
+import BookPopup from '~/components/BookPopup.vue'
+
 export default {
   name: 'IndexPage',
+  components: {
+    BookPopup
+  },
 
   data() {
     return {
+      isPopupOpen: false,
+      selectedBook: null,
       popularBooks: [
-        { id: 1, title: "Popular book 1", chapter: "Глава 181", image: "book_pic6.webp" },
-        { id: 2, title: "Popular book 2", chapter: "Глава 116", image: "book_pic7.webp" },
-        { id: 3, title: "Popular book 3", chapter: "Глава 415", image: "book_pic.webp" },
-        { id: 4, title: "Popular book 4", chapter: "Глава 356", image: "book_pic5.webp" },
-        { id: 5, title: "Popular book 5", chapter: "Глава 102", image: "book_pic4.jpg" },
-        { id: 6, title: "Popular book 6", chapter: "Глава 356", image: "book_pic2.jpg" },
-        { id: 7, title: "Popular book 7", chapter: "Глава 421", image: "book_pic3.jpg" },
-        { id: 8, title: "Popular book 8", chapter: "Глава 125", image: "book_pic5.webp" },
-        { id: 9, title: "Popular book 9", chapter: "Глава 950", image: "book_pic.webp" },
-        { id: 10, title: "Popular book 10", chapter: "Глава 753", image: "book_pic4.jpg" },
-        { id: 11, title: "Popular book 11", chapter: "Глава 654", image: "book_pic5.webp" },
-        { id: 12, title: "Popular book 12", chapter: "Глава 70", image: "book_pic2.jpg" }
+        { id: 1, title: "Popular book 1", chapter: "Глава 181", cover: "book_pic6.webp" },
+        { id: 2, title: "Popular book 2", chapter: "Глава 116", cover: "book_pic7.webp" },
+        { id: 3, title: "Popular book 3", chapter: "Глава 415", cover: "book_pic.webp" },
+        { id: 4, title: "Popular book 4", chapter: "Глава 356", cover: "book_pic5.webp" },
+        { id: 5, title: "Popular book 5", chapter: "Глава 102", cover: "book_pic4.jpg" },
+        { id: 6, title: "Popular book 6", chapter: "Глава 356", cover: "book_pic2.jpg" },
+        { id: 7, title: "Popular book 7", chapter: "Глава 421", cover: "book_pic3.jpg" },
+        { id: 8, title: "Popular book 8", chapter: "Глава 125", cover: "book_pic5.webp" },
+        { id: 9, title: "Popular book 9", chapter: "Глава 950", cover: "book_pic.webp" },
+        { id: 10, title: "Popular book 10", chapter: "Глава 753", cover: "book_pic4.jpg" },
+        { id: 11, title: "Popular book 11", chapter: "Глава 654", cover: "book_pic5.webp" },
+        { id: 12, title: "Popular book 12", chapter: "Глава 70", cover: "book_pic2.jpg" }
       ],
       currentReads: {
         new: [
-          { id: 1, title: "Current reading new book 1", chapter: "Глава 181", image: "book_pic.webp" },
-          { id: 2, title: "Current reading new book 2", chapter: "Глава 116", image: "book_pic2.jpg" },
-          { id: 3, title: "Current reading new book 3", chapter: "Глава 807", image: "book_pic.webp" },
-          { id: 3, title: "Current reading new book 4", chapter: "Глава 807", image: "book_pic.webp" }
+          { id: 1, title: "Current reading new book 1", chapter: "Глава 181", cover: "book_pic.webp" },
+          { id: 2, title: "Current reading new book 2", chapter: "Глава 116", cover: "book_pic2.jpg" },
+          { id: 3, title: "Current reading new book 3", chapter: "Глава 807", cover: "book_pic.webp" },
+          { id: 3, title: "Current reading new book 4", chapter: "Глава 807", cover: "book_pic.webp" }
         ],
         trending: [
-          { id: 1, title: "Current trending book 1", chapter: "Глава 181", image: "book_pic.webp" },
-          { id: 2, title: "Current trending book 2", chapter: "Глава 116", image: "book_pic2.jpg" },
-          { id: 3, title: "Current trending book 3", chapter: "Глава 807", image: "book_pic.webp" }
+          { id: 1, title: "Current trending book 1", chapter: "Глава 181", cover: "book_pic.webp" },
+          { id: 2, title: "Current trending book 2", chapter: "Глава 116", cover: "book_pic2.jpg" },
+          { id: 3, title: "Current trending book 3", chapter: "Глава 807", cover: "book_pic.webp" }
         ],
         popular: [
-          { id: 1, title: "Current popular book 1", chapter: "Глава 181", image: "book_pic.webp" },
-          { id: 2, title: "Current popular book 2", chapter: "Глава 116", image: "book_pic2.jpg" },
-          { id: 3, title: "Сurrent popular book 3", chapter: "Глава 807", image: "book_pic.webp" }
+          { id: 1, title: "Current popular book 1", chapter: "Глава 181", cover: "book_pic.webp" },
+          { id: 2, title: "Current popular book 2", chapter: "Глава 116", cover: "book_pic2.jpg" },
+          { id: 3, title: "Сurrent popular book 3", chapter: "Глава 807", cover: "book_pic.webp" }
         ],
       },
       updates: [
-        { id: 1, title: "Book 1", chapter: "Том 1 Глава 181", image: "book_pic3.jpg" },
-        { id: 2, title: "Book 2", chapter: "Том 2 Глава 165", image: "book_pic6.webp" },
-        { id: 3, title: "Book 3", chapter: "Глава 45", image: "book_pic7.webp" },
-        { id: 4, title: "Book 4", chapter: "Глава 85", image: "book_pic5.webp" },
-        { id: 5, title: "Book 5", chapter: "Том 1 Глава 105", image: "book_pic2.jpg" }
+        { id: 1, title: "Book 1", chapter: "Том 1 Глава 181", cover: "book_pic3.jpg" },
+        { id: 2, title: "Book 2", chapter: "Том 2 Глава 165", cover: "book_pic6.webp" },
+        { id: 3, title: "Book 3", chapter: "Глава 45", cover: "book_pic7.webp" },
+        { id: 4, title: "Book 4", chapter: "Глава 85", cover: "book_pic5.webp" },
+        { id: 5, title: "Book 5", chapter: "Том 1 Глава 105", cover: "book_pic2.jpg" }
       ],
     };
   },
+
+  methods: {
+    openPopup(book) {
+      this.selectedBook = {
+        ...book,
+        author: 'Автор ' + Math.floor(Math.random() * 10 + 1),
+        genre: ['Фантастика', 'Роман', 'Детектив', 'Фэнтези', 'Научная литература'][Math.floor(Math.random() * 5)],
+        country: ['Япония', 'Южная Корея', 'США', 'Россия', 'Франция'][Math.floor(Math.random() * 5)],
+        pages: Math.floor(Math.random() * 500) + 100,
+        year: Math.floor(Math.random() * 30) + 1990,
+        rating: (Math.random() * 2 + 3).toFixed(1),
+        description: 'Это увлекательная книга, которая погружает читателя в захватывающий мир приключений и открытий. История рассказывает о невероятных событиях, которые происходят с главными героями, и о том, как они справляются с различными испытаниями на своем пути.',
+        ratings: {
+          5: Math.floor(Math.random() * 100),
+          4: Math.floor(Math.random() * 100),
+          3: Math.floor(Math.random() * 100),
+          2: Math.floor(Math.random() * 50),
+          1: Math.floor(Math.random() * 20)
+        }
+      }
+      this.isPopupOpen = true
+    },
+    closePopup() {
+      this.isPopupOpen = false
+      this.selectedBook = null
+    }
+  }
 }
 
 </script>
