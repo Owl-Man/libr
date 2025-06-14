@@ -8,6 +8,7 @@
         <LoginTools 
             v-if="isUserFetched"
             :isDesktop="isDesktop"
+            @change-layout="$emit('change-layout', $event)"
         />
     </div>
 </template>

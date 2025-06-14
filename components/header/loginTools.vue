@@ -1,7 +1,7 @@
 <template>
     <div class="login-tools">
         <Profile v-if="isUserFetched"/>
-        <Login v-else/>
+        <Login v-else @change-layout="$emit('change-layout', $event)"/>
     </div>
 </template>
 <script>

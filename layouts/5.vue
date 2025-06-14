@@ -1,15 +1,11 @@
 <template>
-  <div class="page-wrapper">
+  <div class="page-main">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css" rel="stylesheet">
-    <header>
-      <h1>Libria</h1>
-    </header>
-
-    <div class="container">
+    <div class="page-container">
       <div class="tabs">
-        <nuxt-link to="/login">Вход</nuxt-link>
-        <nuxt-link to="/registration" class="active">Регистрация</nuxt-link>
-        <nuxt-link to="/reset">Сброс пароля</nuxt-link>
+        <button @click="changeLayout('6')" class="tab-button">Вход</button>
+        <button @click="changeLayout('5')" class="tab-button active">Регистрация</button>
+        <button @click="changeLayout('7')" class="tab-button">Сброс пароля</button>
       </div>
 
       <form @submit.prevent="register">
@@ -50,43 +46,34 @@ export default {
       // Логика отправки данных регистрации на сервер
       console.log('Регистрация', this.form);
       alert(
-          `Пользователь ${this.form.username} зарегистрирован!`
-        );
+        `Пользователь ${this.form.username} зарегистрирован!`
+      );
+    },
+    changeLayout(layout) {
+      this.$emit('change-layout', layout);
     }
   }
 };
 </script>
 
 <style scoped>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-.page-wrapper {
+.page-main {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   min-height: 100vh;
   background-color: #f5f5f5;
+  padding: 2rem;
 }
 
-.container {
+.page-container {
   background-color: #fff;
-  padding: 20px 30px;
+  padding: 2rem;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 400px;
   text-align: center;
-}
-
-h1 {
-  font-size: 24px;
-  margin-bottom: 20px;
-  color: #333;
 }
 
 .tabs {
@@ -96,34 +83,20 @@ h1 {
   margin-bottom: 20px;
 }
 
-.tabs a {
+.tab-button {
   text-decoration: none;
   color: #666;
   padding: 10px 20px;
   transition: color 0.3s;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
 }
 
-.tabs a.active {
+.tab-button.active {
   color: #007bff;
   border-bottom: 2px solid #007bff;
-}
-
-.social-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin: 20px 0;
-}
-
-.social-buttons img {
-  width: 40px;
-  height: 40px;
-  cursor: pointer;
-  transition: transform 0.3s;
-}
-
-.social-buttons img:hover {
-  transform: scale(1.1);
 }
 
 .form-group {
@@ -146,7 +119,7 @@ input {
   border-radius: 5px;
 }
 
-button {
+button[type="submit"] {
   width: 100%;
   padding: 10px;
   background-color: #007bff;
@@ -158,13 +131,7 @@ button {
   transition: background-color 0.3s;
 }
 
-button:hover {
+button[type="submit"]:hover {
   background-color: #0056b3;
 }
-</style>
-
-<style lang="scss">
-.page-wrapper h1 {
-  font-size: 40;
-}
-</style>
+</style> 
