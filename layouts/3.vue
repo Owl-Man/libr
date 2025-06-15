@@ -20,25 +20,33 @@
           </div>
         </div>
   
-        <!-- Подвкладки -->
-        <div class="tabs flex gap-4 mb-6 border-b border-gray-200">
+        <!-- Подвкладки и кнопка "Создать коллекцию" -->
+        <div class="tabs-container flex justify-between items-center mb-6 border-b border-gray-200">
+          <div class="tabs flex gap-4">
+            <button
+              @click="selectedCollectionTab = 'global'"
+              :class="[
+                'pb-2 px-4 text-sm font-semibold',
+                selectedCollectionTab === 'global' ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-600'
+              ]"
+            >
+              Глобальные ({{ globalCollections.length }})
+            </button>
+            <button
+              @click="selectedCollectionTab = 'saved'"
+              :class="[
+                'pb-2 px-4 text-sm font-semibold',
+                selectedCollectionTab === 'saved' ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-600'
+              ]"
+            >
+              Сохраненные ({{ savedCollections.length }})
+            </button>
+          </div>
           <button
-            @click="selectedCollectionTab = 'global'"
-            :class="[
-              'pb-2 px-4 text-sm font-semibold',
-              selectedCollectionTab === 'global' ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-600'
-            ]"
+            @click="openCreateCollectionPopup"
+            class="add-collection-button px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition text-sm"
           >
-            Глобальные ({{ globalCollections.length }})
-          </button>
-          <button
-            @click="selectedCollectionTab = 'saved'"
-            :class="[
-              'pb-2 px-4 text-sm font-semibold',
-              selectedCollectionTab === 'saved' ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-600'
-            ]"
-          >
-            Сохраненные ({{ savedCollections.length }})
+            + Создать коллекцию
           </button>
         </div>
   
@@ -100,9 +108,15 @@
             @book-click="openBookPopup"
           />
           <BookPopup
+            v-if="selectedBook"
             :is-open="isBookPopupOpen"
             :book="selectedBook"
             @close="closeBookPopup"
+          />
+          <CreateCollectionPopup
+            :is-open="isCreateCollectionPopupOpen"
+            @close="closeCreateCollectionPopup"
+            @create="createCollection"
           />
         </section>
       </div>
@@ -112,8 +126,15 @@
   <script>
   import CollectionPopup from '~/components/CollectionPopup.vue'
   import BookPopup from '~/components/BookPopup.vue'
+  import CreateCollectionPopup from '~/components/CreateCollectionPopup.vue'
+  
   export default {
     name: 'CollectionsPage',
+    components: {
+      CollectionPopup,
+      BookPopup,
+      CreateCollectionPopup
+    },
   
     data() {
       return {
@@ -124,6 +145,7 @@
         selectedBook: null,
         selectedCollectionTab: 'global', // Добавляем состояние для вкладок коллекций
         openMenuCollectionId: null, // Добавляем состояние для отслеживания открытого меню
+        isCreateCollectionPopupOpen: false, // Added for CreateCollectionPopup
         globalCollections: [
           {
             id: 1,
@@ -349,7 +371,7 @@
             createdAt: '2025-03-10',
           },
         ],
-        savedCollections: [], // Добавляем пустой список для сохраненных коллекций
+        savedCollections: [], // Saved collections will be stored here
       };
     },
   
@@ -382,7 +404,8 @@
   
     methods: {
       applyFilter() {
-        // Логика фильтрации реализована в computed свойстве filteredCollections
+        // Apply filter logic here
+        console.log('Applying filter:', this.selectedFilter);
       },
       openCollectionPopup(collection) {
         this.selectedCollection = collection;
@@ -393,17 +416,7 @@
         this.selectedCollection = null;
       },
       openBookPopup(book) {
-        this.selectedBook = {
-          ...book,
-          author: book.author || ('Автор ' + Math.floor(Math.random() * 10 + 1)),
-          genre: book.genre || ['Фантастика', 'Роман', 'Детектив', 'Фэнтези', 'Научная литература'][Math.floor(Math.random() * 5)],
-          country: book.country || ['Япония', 'Южная Корея', 'США', 'Россия', 'Франция'][Math.floor(Math.random() * 5)],
-          pages: book.pages || (Math.floor(Math.random() * 500) + 100),
-          year: book.year || (Math.floor(Math.random() * 30) + 1990),
-          rating: book.rating || (Math.random() * 2 + 3).toFixed(1),
-          description: book.description || 'Описание отсутствует',
-          ratings: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 }
-        };
+        this.selectedBook = book;
         this.isBookPopupOpen = true;
       },
       closeBookPopup() {
@@ -414,7 +427,7 @@
         this.openMenuCollectionId = this.openMenuCollectionId === collectionId ? null : collectionId;
       },
       isCollectionSaved(collectionId) {
-        return this.savedCollections.some(col => col.id === collectionId);
+        return this.savedCollections.some(collection => collection.id === collectionId);
       },
       saveCollection(collection) {
         if (!this.isCollectionSaved(collection.id)) {
@@ -423,13 +436,34 @@
         this.openMenuCollectionId = null;
       },
       removeSavedCollection(collectionId) {
-        this.savedCollections = this.savedCollections.filter(col => col.id !== collectionId);
+        this.savedCollections = this.savedCollections.filter(collection => collection.id !== collectionId);
         this.openMenuCollectionId = null;
       },
-      handleClickOutside(event) {
-        if (this.openMenuCollectionId && !event.target.closest('.options-button') && !event.target.closest('.options-menu')) {
-          this.openMenuCollectionId = null;
+      openCreateCollectionPopup() {
+        this.isCreateCollectionPopupOpen = true;
+      },
+      closeCreateCollectionPopup() {
+        this.isCreateCollectionPopupOpen = false;
+      },
+      createCollection(collectionName) {
+        if (collectionName) {
+          const newCollection = {
+            id: Date.now(), // Simple unique ID
+            title: collectionName,
+            description: 'Новая коллекция',
+            image: 'book_pic.webp', // Default image
+            books: [],
+            comments: 0,
+            likes: 0,
+            rating: 0,
+            popularityYear: 0,
+            popularityMonth: 0,
+            popularityWeek: 0,
+            createdAt: new Date().toISOString().split('T')[0],
+          };
+          this.globalCollections.push(newCollection);
         }
+        this.closeCreateCollectionPopup();
       }
     },
     mounted() {
@@ -437,10 +471,6 @@
     },
     beforeDestroy() {
       document.removeEventListener('click', this.handleClickOutside);
-    },
-    components: {
-      CollectionPopup,
-      BookPopup
     },
   };
   </script>
@@ -569,5 +599,12 @@
 
   .no-results {
     color: #666;
+  }
+
+  .add-collection-button {
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    &:hover {
+      transform: translateY(-2px);
+    }
   }
   </style>

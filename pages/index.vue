@@ -2,9 +2,12 @@
   <div class="page-main">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css" rel="stylesheet">
     <BookPopup
+      v-if="selectedBook"
       :is-open="isPopupOpen"
       :book="selectedBook"
       @close="closePopup"
+      :user-collections="globalCollections"
+      @add-book-to-collection="handleAddBookToCollection"
     />
     <div class="main-page-container">
       <!-- Верхний блок с популярными главами -->
@@ -68,7 +71,7 @@
             <div class="update-details">
               <div class="update-title">{{ book.title.replace(/\s*Автор\s*\d+/g, '') }}</div>
               <div class="update-rating">{{ book.rating }} ★</div>
-              <div class="update-chapter">{{ book.chapter }}</div>
+            <div class="update-chapter">{{ book.chapter }}</div>
             </div>
           </li>
         </ul>
@@ -90,6 +93,36 @@ export default {
     return {
       isPopupOpen: false,
       selectedBook: null,
+      globalCollections: [
+        {
+          id: 1,
+          title: 'Корги | Коллекция для принцессы дуги',
+          description: 'Мини описание',
+          image: 'book_pic.webp',
+          books: [],
+          comments: 1,
+          likes: 2,
+          rating: 4.8,
+          popularityYear: 500,
+          popularityMonth: 200,
+          popularityWeek: 50,
+          createdAt: '2025-03-15',
+        },
+        {
+          id: 2,
+          title: 'Коллекция книг для зимы • уют',
+          description: 'Мини описание',
+          image: 'book_pic2.jpg',
+          books: [],
+          comments: 0,
+          likes: 1,
+          rating: 4.0,
+          popularityYear: 300,
+          popularityMonth: 100,
+          popularityWeek: 30,
+          createdAt: '2025-03-10',
+        },
+      ],
       popularBooks: [
         { id: 1, title: "Popular book 1", chapter: "Глава 181", cover: "book_pic6.webp", author: "Автор 1", rating: 4.5 },
         { id: 2, title: "Popular book 2", chapter: "Глава 116", cover: "book_pic7.webp", author: "Автор 2", rating: 4.2 },
@@ -156,6 +189,21 @@ export default {
     closePopup() {
       this.isPopupOpen = false
       this.selectedBook = null
+    },
+    handleAddBookToCollection({ book, collectionId }) {
+      const collection = this.globalCollections.find(col => col.id === collectionId);
+      if (collection) {
+        const bookExists = collection.books.some(b => b.title === book.title);
+        if (!bookExists) {
+          collection.books.push(book);
+          console.log(`Книга "${book.title}" добавлена в коллекцию "${collection.title}"`);
+        } else {
+          console.log(`Книга "${book.title}" уже есть в коллекции "${collection.title}"`);
+        }
+      } else {
+        console.error(`Коллекция с ID ${collectionId} не найдена.`);
+      }
+      this.closePopup();
     }
   }
 }

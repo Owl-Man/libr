@@ -3,9 +3,12 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css" rel="stylesheet">
     <div class="page-container">
       <BookPopup
+        v-if="selectedBook"
         :is-open="isPopupOpen"
         :book="selectedBook"
         @close="closePopup"
+        :user-collections="globalCollections"
+        @add-book-to-collection="handleAddBookToCollection"
       />
       <!-- Поиск -->
       <div class="search-bar">
@@ -137,6 +140,36 @@ export default {
       ],
       isPopupOpen: false,
       selectedBook: null,
+      globalCollections: [
+        {
+          id: 1,
+          title: 'Корги | Коллекция для принцессы дуги',
+          description: 'Мини описание',
+          image: 'book_pic.webp',
+          books: [],
+          comments: 1,
+          likes: 2,
+          rating: 4.8,
+          popularityYear: 500,
+          popularityMonth: 200,
+          popularityWeek: 50,
+          createdAt: '2025-03-15',
+        },
+        {
+          id: 2,
+          title: 'Коллекция книг для зимы • уют',
+          description: 'Мини описание',
+          image: 'book_pic2.jpg',
+          books: [],
+          comments: 0,
+          likes: 1,
+          rating: 4.0,
+          popularityYear: 300,
+          popularityMonth: 100,
+          popularityWeek: 30,
+          createdAt: '2025-03-10',
+        },
+      ],
     };
   },
 
@@ -211,6 +244,22 @@ export default {
     closePopup() {
       this.isPopupOpen = false
       this.selectedBook = null
+    },
+    handleAddBookToCollection({ book, collectionId }) {
+      const collection = this.globalCollections.find(col => col.id === collectionId);
+      if (collection) {
+        // Check if book already exists in collection to prevent duplicates
+        const bookExists = collection.books.some(b => b.title === book.title);
+        if (!bookExists) {
+          collection.books.push(book);
+          console.log(`Книга "${book.title}" добавлена в коллекцию "${collection.title}"`);
+        } else {
+          console.log(`Книга "${book.title}" уже есть в коллекции "${collection.title}"`);
+        }
+      } else {
+        console.error(`Коллекция с ID ${collectionId} не найдена.`);
+      }
+      this.closePopup();
     },
   },
 };

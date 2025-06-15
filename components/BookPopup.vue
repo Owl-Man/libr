@@ -1,81 +1,98 @@
 <template>
-  <transition name="fade">
-    <div v-if="isOpen" class="book-popup-overlay" @click="closePopup">
-      <div class="book-popup" @click.stop>
-        <button class="close-button" @click="closePopup">&times;</button>
-        <div class="book-popup-content">
-          <div class="book-cover">
-            <img :src="book?.cover || book?.image" :alt="book?.title" />
-          </div>
-          <div class="book-details">
-            <h2>{{ book?.title }}</h2>
-            <div class="book-meta">
-              <p><strong>Автор:</strong> {{ book?.author }}</p>
-              <p><strong>Жанр:</strong> {{ book?.genre }}</p>
-              <p><strong>Страна:</strong> {{ book?.country }}</p>
-              <p><strong>Количество страниц:</strong> {{ book?.pages || 'Не указано' }}</p>
-              <p><strong>Год издания:</strong> {{ book?.year || 'Не указано' }}</p>
+  <div>
+    <transition name="fade">
+      <div v-if="isOpen" class="book-popup-overlay" @click="closePopup">
+        <div class="book-popup" @click.stop>
+          <button class="close-button" @click="closePopup">&times;</button>
+          <div class="book-popup-content">
+            <div class="book-cover">
+              <img :src="book?.cover || book?.image" :alt="book?.title" />
             </div>
-            <div class="book-rating">
-              <h3>Рейтинг: {{ book?.rating }} ★</h3>
-              <div class="rating-stars">
-                <span 
-                  v-for="star in 5" 
-                  :key="star"
-                  class="star"
-                  :class="{ 'active': star <= userRating }"
-                  @click="setRating(star)"
-                  @mouseover="hoverRating = star"
-                  @mouseleave="hoverRating = 0"
-                >
-                  ★
-                </span>
-                <span class="rating-text" v-if="userRating">Ваша оценка: {{ userRating }} ★</span>
+            <div class="book-details">
+              <h2>{{ book?.title }}</h2>
+              <div class="book-meta">
+                <p><strong>Автор:</strong> {{ book?.author }}</p>
+                <p><strong>Жанр:</strong> {{ book?.genre }}</p>
+                <p><strong>Страна:</strong> {{ book?.country }}</p>
+                <p><strong>Количество страниц:</strong> {{ book?.pages || 'Не указано' }}</p>
+                <p><strong>Год издания:</strong> {{ book?.year || 'Не указано' }}</p>
               </div>
-              <div class="rating-breakdown">
-                <p>5 ★: {{ book?.ratings?.[5] || 0 }}</p>
-                <p>4 ★: {{ book?.ratings?.[4] || 0 }}</p>
-                <p>3 ★: {{ book?.ratings?.[3] || 0 }}</p>
-                <p>2 ★: {{ book?.ratings?.[2] || 0 }}</p>
-                <p>1 ★: {{ book?.ratings?.[1] || 0 }}</p>
-              </div>
-            </div>
-            <div class="book-actions">
-              <button class="read-button" @click="startReading">
-                Читать
-                <span class="read-icon">→</span>
-              </button>
-              <div class="bookmark-dropdown">
-                <button class="bookmark-button" @click="toggleBookmarkDropdown">
-                  Добавить в закладки
-                  <span class="bookmark-icon">▼</span>
-                </button>
-                <div v-if="isBookmarkDropdownOpen" class="bookmark-menu">
-                  <button 
-                    v-for="status in bookmarkStatuses" 
-                    :key="status"
-                    class="bookmark-option"
-                    @click="addToBookmark(status)"
+              <div class="book-rating">
+                <h3>Рейтинг: {{ book?.rating }} ★</h3>
+                <div class="rating-stars">
+                  <span 
+                    v-for="star in 5" 
+                    :key="star"
+                    class="star"
+                    :class="{ 'active': star <= userRating }"
+                    @click="setRating(star)"
+                    @mouseover="hoverRating = star"
+                    @mouseleave="hoverRating = 0"
                   >
-                    {{ status }}
-                  </button>
+                    ★
+                  </span>
+                  <span class="rating-text" v-if="userRating">Ваша оценка: {{ userRating }} ★</span>
+                </div>
+                <div class="rating-breakdown">
+                  <p>5 ★: {{ book?.ratings?.[5] || 0 }}</p>
+                  <p>4 ★: {{ book?.ratings?.[4] || 0 }}</p>
+                  <p>3 ★: {{ book?.ratings?.[3] || 0 }}</p>
+                  <p>2 ★: {{ book?.ratings?.[2] || 0 }}</p>
+                  <p>1 ★: {{ book?.ratings?.[1] || 0 }}</p>
                 </div>
               </div>
-            </div>
-            <div class="book-description">
-              <h3>Описание</h3>
-              <p>{{ book?.description || 'Описание отсутствует' }}</p>
+              <div class="book-actions">
+                <button class="read-button" @click="startReading">
+                  Читать
+                  <span class="read-icon">→</span>
+                </button>
+                <div class="bookmark-dropdown">
+                  <button class="bookmark-button" @click="toggleBookmarkDropdown">
+                    Добавить в закладки
+                    <span class="bookmark-icon">▼</span>
+                  </button>
+                  <div v-if="isBookmarkDropdownOpen" class="bookmark-menu">
+                    <button 
+                      v-for="status in bookmarkStatuses" 
+                      :key="status"
+                      class="bookmark-option"
+                      @click="addToBookmark(status)"
+                    >
+                      {{ status }}
+                    </button>
+                  </div>
+                </div>
+                <button class="bookmark-button" @click="openAddToCollectionPopup">
+                  Добавить в коллекцию
+                </button>
+              </div>
+              <div class="book-description">
+                <h3>Описание</h3>
+                <p>{{ book?.description || 'Описание отсутствует' }}</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </transition>
+    </transition>
+    <AddToCollectionPopup
+      :is-open="isAddToCollectionPopupOpen"
+      :book-to-add="book"
+      :collections="userCollections"
+      @close="closeAddToCollectionPopup"
+      @add-to-collection="handleAddBookToCollection"
+    />
+  </div>
 </template>
 
 <script>
+import AddToCollectionPopup from '~/components/AddToCollectionPopup.vue'
+
 export default {
   name: 'BookPopup',
+  components: {
+    AddToCollectionPopup
+  },
   props: {
     isOpen: {
       type: Boolean,
@@ -85,6 +102,10 @@ export default {
       type: Object,
       required: true,
       default: () => ({})
+    },
+    userCollections: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
@@ -92,6 +113,7 @@ export default {
       userRating: 0,
       hoverRating: 0,
       isBookmarkDropdownOpen: false,
+      isAddToCollectionPopupOpen: false,
       bookmarkStatuses: ['Избранное', 'Смотрю', 'В планах', 'Просмотрено', 'Отложено', 'Брошено']
     }
   },
@@ -114,6 +136,16 @@ export default {
       console.log(`Добавление книги "${this.book.title}" в закладки: ${status}`)
       this.isBookmarkDropdownOpen = false
       // Здесь добавить логику сохранения в закладки
+    },
+    openAddToCollectionPopup() {
+      this.isAddToCollectionPopupOpen = true;
+      this.isBookmarkDropdownOpen = false;
+    },
+    closeAddToCollectionPopup() {
+      this.isAddToCollectionPopupOpen = false;
+    },
+    handleAddBookToCollection({ book, collectionId }) {
+      this.$emit('add-book-to-collection', { book, collectionId });
     }
   }
 }
