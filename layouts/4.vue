@@ -39,27 +39,20 @@
           <div v-if="filteredBooks.length === 0" class="no-results text-black text-center">
             <p>Книги не найдены.</p>
           </div>
-          <div v-else v-for="book in filteredBooks" :key="updateKey" class="book-card flex mb-6 cursor-pointer" @click="openPopup(book)">
-            <img :src="book.image" :alt="book.title" class="w-20 h-50 rounded-lg mr-4 object-cover" />
-            <div class="flex-1">
-              <h3 class="text-black text-lg font-semibold">{{ book.title }}</h3>
-              <p class="text-gray-600 text-sm">{{ book.chapters }} • {{ book.rating }} ★</p>
-              <p class="text-gray-600 text-sm mt-1">{{ book.description }}</p>
+          <div v-else class="bookmarks-grid">
+            <div v-for="book in filteredBooks" :key="book.id" class="book-card cursor-pointer mb-6" @click="openPopup(book)">
+              <img :src="book.image" :alt="book.title" />
+              <div class="title">{{ book.title }}</div>
+              <div class="chapter">{{ book.chapters }}</div>
+              <div class="rating">{{ book.rating }} ★</div>
+              <div class="author">{{ book.description }}</div>
               <button
-                @click="addToBookmarks(book)"
+                @click.stop="addToBookmarks(book)"
                 class="mt-2 p-1 bg-gray-200 text-gray-700 rounded-lg text-sm hover:bg-gray-300 transition"
               >
                 {{ book.status }}
               </button>
             </div>
-            <div class="flex items-center">
-              <button class="p-2">
-                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
-                </svg>
-              </button>
-            </div>
-            
           </div>
         </section>
       </div>
@@ -360,6 +353,7 @@
   </script>
   
   <style lang="scss">
+  @import "~assets/scss/_book-card.scss";
   .page-container-4 {
     max-width: 1200px;
     min-width: 800px;
@@ -396,29 +390,16 @@
     color: #3b82f6;
   }
   
-  /* Карточки книг */
-  .book-card {
-    transition: transform 0.3s ease;
-  }
-  
-  .book-card:hover {
-    transform: scale(1.02);
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .book-card img {
-    transition: transform 0.3s ease;
-    width: fit-content;
-    max-width: 100px;
-  }
-  
-  .book-card:hover img {
-    transform: scale(1.05);
-  }
-  
   /* Стили для сообщения, если книг нет */
   .no-results {
     padding: 20px;
     font-size: 16px;
+  }
+  
+  .bookmarks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 28px 24px;
+    margin-top: 10px;
   }
   </style>

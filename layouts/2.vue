@@ -79,13 +79,13 @@
             <div
               v-for="book in category.books"
               :key="book.title"
-              class="book-card flex-none w-36 text-center cursor-pointer"
+              class="book-card cursor-pointer"
               @click="openPopup(book)"
             >
-              <img :src="book.cover" :alt="book.title" class="w-full rounded-lg" />
-              <div class="title mt-2">{{ book.title }}</div>
-              <div class="chapter text-gray-500 text-sm">{{ book.author }}</div>
-              <div class="rating text-sm text-yellow-500">Рейтинг: {{ book.rating }} ★</div>
+              <img :src="book.cover" :alt="book.title" />
+              <div class="title">{{ book.title }}</div>
+              <div class="author">{{ book.author }}</div>
+              <div class="rating">Рейтинг: {{ book.rating }} ★</div>
             </div>
           </div>
         </div>
@@ -217,6 +217,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import "~assets/scss/_book-card.scss";
+
 .page-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -279,32 +281,5 @@ export default {
 
 .book-list::-webkit-scrollbar-track {
   background-color: #333;
-}
-
-.book-card {
-  transition: transform 0.3s ease;
-}
-
-.book-card img {
-  transition: transform 0.3s ease;
-}
-
-.book-card:hover img {
-  transform: scale(1.02);
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
-}
-
-.title {
-  font-size: 14px;
-  margin-top: 5px;
-}
-
-.chapter {
-  font-size: 12px;
-  color: #aaa;
-}
-
-.rating {
-  font-size: 12px;
 }
 </style>

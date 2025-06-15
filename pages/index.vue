@@ -7,11 +7,10 @@
       @close="closePopup"
     />
     <div class="main-page-container">
-      <nuxt :key="$route.fullPath" />
       <!-- Верхний блок с популярными главами -->
       <h2 class="title-text">Обзор →</h2>
       <section class="popular">
-        <div v-for="item in popularBooks" :key="item.id" class="main-book-card cursor-pointer" @click="openPopup(item)">
+        <div v-for="item in popularBooks" :key="item.id" class="book-card cursor-pointer" @click="openPopup(item)">
           <img :src="item.cover" :alt="item.title" />
           <div class="title">{{ item.title }}</div>
           <div class="chapter">{{ item.chapter }}</div>
@@ -156,6 +155,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import "~assets/scss/_book-card.scss";
+
 .title-text {
   transition: transform 0.3s ease;
 }
@@ -208,34 +209,6 @@ export default {
 .popular::-webkit-scrollbar-track {
   background-color: #333;
   /* Цвет фона полосы прокрутки */
-}
-
-.main-book-card {
-  flex: 0 0 150px;
-  text-align: center;
-  transition: transform 0.3s ease;
-}
-
-.book-card img {
-  width: 100%;
-  border-radius: 5px;
-  transition: transform 0.3s ease;
-}
-
-.book-card:hover img {
-  transform: scale(1.02);
-  /* Увеличение изображения на 2% */
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
-}
-
-.title {
-  font-size: 14px;
-  margin-top: 5px;
-}
-
-.chapter {
-  font-size: 12px;
-  color: #aaa;
 }
 
 /* "Сейчас читают" блок */

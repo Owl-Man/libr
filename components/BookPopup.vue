@@ -40,10 +40,28 @@
                 <p>1 ★: {{ book?.ratings?.[1] || 0 }}</p>
               </div>
             </div>
-            <button class="read-button" @click="startReading">
-              Читать
-              <span class="read-icon">→</span>
-            </button>
+            <div class="book-actions">
+              <button class="read-button" @click="startReading">
+                Читать
+                <span class="read-icon">→</span>
+              </button>
+              <div class="bookmark-dropdown">
+                <button class="bookmark-button" @click="toggleBookmarkDropdown">
+                  Добавить в закладки
+                  <span class="bookmark-icon">▼</span>
+                </button>
+                <div v-if="isBookmarkDropdownOpen" class="bookmark-menu">
+                  <button 
+                    v-for="status in bookmarkStatuses" 
+                    :key="status"
+                    class="bookmark-option"
+                    @click="addToBookmark(status)"
+                  >
+                    {{ status }}
+                  </button>
+                </div>
+              </div>
+            </div>
             <div class="book-description">
               <h3>Описание</h3>
               <p>{{ book?.description || 'Описание отсутствует' }}</p>
@@ -72,7 +90,9 @@ export default {
   data() {
     return {
       userRating: 0,
-      hoverRating: 0
+      hoverRating: 0,
+      isBookmarkDropdownOpen: false,
+      bookmarkStatuses: ['Избранное', 'Смотрю', 'В планах', 'Просмотрено', 'Отложено', 'Брошено']
     }
   },
   methods: {
@@ -86,6 +106,14 @@ export default {
     startReading() {
       // Здесь добавить логику начала чтения
       console.log('Начало чтения книги:', this.book.title)
+    },
+    toggleBookmarkDropdown() {
+      this.isBookmarkDropdownOpen = !this.isBookmarkDropdownOpen
+    },
+    addToBookmark(status) {
+      console.log(`Добавление книги "${this.book.title}" в закладки: ${status}`)
+      this.isBookmarkDropdownOpen = false
+      // Здесь добавить логику сохранения в закладки
     }
   }
 }
@@ -112,17 +140,17 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 3000;
   backdrop-filter: blur(5px);
 }
 
 .book-popup {
   background-color: white;
   border-radius: 12px;
-  padding: 30px;
-  max-width: 1000px;
-  width: 95%;
-  max-height: 95vh;
+  padding: 20px 18px;
+  max-width: 1400px;
+  width: 98%;
+  max-height: 90vh;
   overflow-y: auto;
   position: relative;
   animation: popup-appear 0.3s ease-out;
@@ -236,6 +264,65 @@ export default {
   }
 }
 
+.book-actions {
+  display: flex;
+  gap: 10px;
+  margin: 18px 0 18px 0;
+  align-items: center;
+}
+
+.bookmark-dropdown {
+  position: relative;
+  min-width: 0;
+}
+
+.bookmark-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background-color: #f0f0f0;
+  color: #333;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.bookmark-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 6px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.13);
+  overflow-y: auto;
+  z-index: 1000;
+  min-width: 160px;
+  max-height: 220px;
+  padding: 4px 0;
+}
+
+.bookmark-option {
+  display: block;
+  width: 100%;
+  padding: 8px 18px;
+  text-align: left;
+  border: none;
+  background: none;
+  font-size: 15px;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #f5f5f5;
+  }
+}
+
 .book-description {
   margin-bottom: 30px;
   h3 {
@@ -253,28 +340,21 @@ export default {
 .read-button {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 16px 32px;
+  gap: 10px;
+  padding: 10px 22px;
   background-color: #4CAF50;
   color: white;
   border: none;
-  border-radius: 12px;
-  font-size: 18px;
+  border-radius: 10px;
+  font-size: 16px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin: 30px 0;
-
-  &:hover {
-    background-color: #45a049;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-  }
+  margin: 0;
 
   .read-icon {
     transition: transform 0.3s ease;
   }
-
   &:hover .read-icon {
     transform: translateX(5px);
   }
@@ -287,12 +367,23 @@ export default {
   
   .book-cover {
     flex: 0 0 auto;
-    max-width: 250px;
+    max-width: 180px;
     margin: 0 auto;
   }
 
   .rating-breakdown {
     grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .book-popup {
+    max-width: 99vw;
+    padding: 10px 2vw;
+  }
+
+  .book-actions {
+    flex-direction: column;
+    gap: 8px;
+    margin: 12px 0;
   }
 }
 </style> 

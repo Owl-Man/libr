@@ -25,7 +25,7 @@
           <div v-if="filteredCollections.length === 0" class="no-results text-white text-center">
             <p>Коллекции не найдены.</p>
           </div>
-          <div v-else v-for="collection in filteredCollections" :key="collection.id" class="collection-card mb-6">
+          <div v-else v-for="collection in filteredCollections" :key="collection.id" class="collection-card mb-6 cursor-pointer" @click="openCollectionPopup(collection)">
             <div class="collection-header flex items-center mb-2">
               <img :src="collection.image" :alt="collection.title" class="w-16 h-16 rounded-lg mr-4 text-gray" />
               <div>
@@ -48,24 +48,79 @@
               </span>
             </div>
           </div>
+          <CollectionPopup
+            :isOpen="isCollectionPopupOpen"
+            :collection="selectedCollection"
+            :onClose="closeCollectionPopup"
+            @book-click="openBookPopup"
+          />
+          <BookPopup
+            :is-open="isBookPopupOpen"
+            :book="selectedBook"
+            @close="closeBookPopup"
+          />
         </section>
       </div>
     </div>
   </template>
   
   <script>
+  import CollectionPopup from '~/components/CollectionPopup.vue'
+  import BookPopup from '~/components/BookPopup.vue'
   export default {
     name: 'CollectionsPage',
   
     data() {
       return {
         selectedFilter: 'leaders', // Фильтр по умолчанию
+        isCollectionPopupOpen: false,
+        selectedCollection: null,
+        isBookPopupOpen: false,
+        selectedBook: null,
         collections: [
           {
             id: 1,
             title: 'Корги | Коллекция для принцессы дуги',
             description: 'Мини описание',
             image: 'book_pic.webp',
+            books: [
+              {
+                title: 'Книга 1',
+                cover: 'book_pic.webp',
+                author: 'Автор 1',
+                genre: 'Фантастика',
+                country: 'Япония',
+                pages: 320,
+                year: 2018,
+                rating: 4.7,
+                description: 'Описание книги 1...',
+                ratings: { 5: 53, 4: 4, 3: 14, 2: 11, 1: 9 }
+              },
+              {
+                title: 'Книга 2',
+                cover: 'book_pic2.jpg',
+                author: 'Автор 2',
+                genre: 'Роман',
+                country: 'США',
+                pages: 250,
+                year: 2020,
+                rating: 4.5,
+                description: 'Описание книги 2...',
+                ratings: { 5: 40, 4: 10, 3: 5, 2: 2, 1: 1 }
+              },
+              {
+                title: 'Книга 3',
+                cover: 'book_pic3.jpg',
+                author: 'Автор 3',
+                genre: 'Детектив',
+                country: 'Россия',
+                pages: 410,
+                year: 2015,
+                rating: 4.2,
+                description: 'Описание книги 3...',
+                ratings: { 5: 30, 4: 15, 3: 10, 2: 5, 1: 2 }
+              },
+            ],
             comments: 1,
             likes: 2,
             rating: 4.8,
@@ -79,6 +134,10 @@
             title: 'Коллекция книг для зимы • уют',
             description: 'Мини описание',
             image: 'book_pic2.jpg',
+            books: [
+              { title: 'Книга 4', cover: 'book_pic4.jpg' },
+              { title: 'Книга 5', cover: 'book_pic5.webp' },
+            ],
             comments: 0,
             likes: 0,
             rating: 4.8,
@@ -92,6 +151,10 @@
             title: 'Лучшее от ИмяАвтора',
             description: 'Мини описание',
             image: 'book_pic3.jpg',
+            books: [
+              { title: 'Книга 6', cover: 'book_pic6.webp' },
+              { title: 'Книга 7', cover: 'book_pic7.webp' },
+            ],
             comments: 7,
             likes: 0,
             rating: 4.6,
@@ -105,6 +168,10 @@
             title: 'Мои любимые книги, где надо много думать, грустить и стоять у окна',
             description: 'Мини описание',
             image: 'book_pic4.jpg',
+            books: [
+              { title: 'Книга 8', cover: 'book_pic4.jpg' },
+              { title: 'Книга 9', cover: 'book_pic.webp' },
+            ],
             comments: 2,
             likes: 0,
             rating: 4.7,
@@ -193,6 +260,36 @@
       applyFilter() {
         // Логика фильтрации реализована в computed свойстве filteredCollections
       },
+      openCollectionPopup(collection) {
+        this.selectedCollection = collection;
+        this.isCollectionPopupOpen = true;
+      },
+      closeCollectionPopup() {
+        this.isCollectionPopupOpen = false;
+        this.selectedCollection = null;
+      },
+      openBookPopup(book) {
+        this.selectedBook = {
+          ...book,
+          author: book.author || ('Автор ' + Math.floor(Math.random() * 10 + 1)),
+          genre: book.genre || ['Фантастика', 'Роман', 'Детектив', 'Фэнтези', 'Научная литература'][Math.floor(Math.random() * 5)],
+          country: book.country || ['Япония', 'Южная Корея', 'США', 'Россия', 'Франция'][Math.floor(Math.random() * 5)],
+          pages: book.pages || (Math.floor(Math.random() * 500) + 100),
+          year: book.year || (Math.floor(Math.random() * 30) + 1990),
+          rating: book.rating || (Math.random() * 2 + 3).toFixed(1),
+          description: book.description || 'Описание отсутствует',
+          ratings: book.ratings || { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 }
+        };
+        this.isBookPopupOpen = true;
+      },
+      closeBookPopup() {
+        this.isBookPopupOpen = false;
+        this.selectedBook = null;
+      },
+    },
+    components: {
+      CollectionPopup,
+      BookPopup
     },
   };
   </script>
