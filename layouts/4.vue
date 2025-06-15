@@ -52,6 +52,14 @@
               >
                 {{ book.status }}
               </button>
+              <div class="options-button" @click.stop="toggleMenu(book.id)">
+                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
+                </svg>
+                <div v-if="openMenuId === book.id" class="options-menu" @click.stop>
+                  <button @click="deleteBook(book.id, selectedTab)" class="option-item">Удалить</button>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -286,6 +294,7 @@
         },
         isPopupOpen: false,
         selectedBook: null,
+        openMenuId: null,
       };
     },
   
@@ -348,7 +357,25 @@
         this.isPopupOpen = false
         this.selectedBook = null
       },
+      toggleMenu(bookId) {
+        this.openMenuId = this.openMenuId === bookId ? null : bookId;
+      },
+      deleteBook(bookId, tab) {
+        this.bookmarks[tab] = this.bookmarks[tab].filter(book => book.id !== bookId);
+        this.openMenuId = null;
+      },
+      handleClickOutside(event) {
+        if (this.openMenuId && !event.target.closest('.options-button')) {
+          this.openMenuId = null;
+        }
+      }
     },
+    mounted() {
+      document.addEventListener('click', this.handleClickOutside);
+    },
+    beforeDestroy() {
+      document.removeEventListener('click', this.handleClickOutside);
+    }
   };
   </script>
   
@@ -401,5 +428,49 @@
     grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
     gap: 28px 24px;
     margin-top: 10px;
+  }
+  .book-card {
+    position: relative;
+  }
+  .options-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    &:hover {
+      background-color: rgba(0,0,0,0.05);
+    }
+    svg {
+      display: block;
+    }
+  }
+  .options-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 100;
+    min-width: 120px;
+    overflow: hidden;
+  }
+  .option-item {
+    display: block;
+    width: 100%;
+    padding: 10px 15px;
+    text-align: left;
+    border: none;
+    background: none;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    &:hover {
+      background-color: #f0f0f0;
+    }
   }
   </style>

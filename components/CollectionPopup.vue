@@ -7,7 +7,10 @@
         <div class="books-grid">
           <div v-for="book in collection?.books || []" :key="book.title" class="book-card cursor-pointer" @click="$emit('book-click', book)">
             <img :src="book.cover" :alt="book.title" class="book-cover" />
-            <div class="book-title">{{ book.title }}</div>
+            <div class="title">{{ book.title }}</div>
+            <div class="author">{{ book.author }}</div>
+            <div class="rating">{{ book.rating }} ★</div>
+            <div class="chapter">{{ book.chapters || book.description }}</div>
           </div>
         </div>
       </div>
